@@ -1,0 +1,65 @@
+﻿<Window x:Class="Views.WPF_MVVM_Core.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:local="clr-namespace:WPF_MVVM_Core"
+        xmlns:vm="clr-namespace:WPF_MVVM_Core.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="399" Width="732">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <ListView HorizontalAlignment="Left" Height="269" 
+                  Margin="10,10,0,0" VerticalAlignment="Top" Width="519" 
+                  ItemsSource="{Binding Player.SongList}" SelectedItem="{Binding SelectedSong}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Artist" Width="150" DisplayMemberBinding="{Binding Artist}" />
+                    <GridViewColumn Header="Title" Width="238" DisplayMemberBinding="{Binding SongName}" />
+                    <GridViewColumn Header="Duration" Width="50" DisplayMemberBinding="{Binding Duration, StringFormat={}{0:mm':'ss}}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button Content="Add Songs" 
+                Margin="588,14,69,328"
+                Command="{Binding ClickAddSong}"/>
+
+        <Button Content="|>" 
+            Margin="210,329,443,10"
+            Command="{Binding ClickPlaySong}"/>
+
+        <Button Content="right" 
+            Margin="350,329,295,10"
+             Command="{Binding ClickPlayNext}"/>
+
+        <Button Content="left" 
+            Margin="64,329,581,10"
+            Command="{Binding ClickPlayPrevious}"/>
+
+        <Slider HorizontalAlignment="Left" Margin="10,291,0,0" 
+                VerticalAlignment="Top" Height="38" Width="519" 
+                IsEnabled="True" Maximum="1000" 
+                Value="{Binding PercentOfCurrentDurationOfSong}"
+                vm:SliderExtension.DragCompletedCommand="{Binding SliderStartedChanged}"
+                vm:SliderExtensionCompleted.DragStartedCommand="{Binding SliderChanged}"
+                >
+        </Slider>
+
+        <TextBlock Text="{Binding CurrentTimeOfPlayingSong, StringFormat={}{0:mm':'ss}}" HorizontalAlignment="Left" 
+               Margin="534,283,0,0" VerticalAlignment="Top" 
+               Width="57" Height="32" FontSize="20"/>
+
+        <Slider HorizontalAlignment="Left" Margin="558,60,0,0" 
+                VerticalAlignment="Top" Height="219" Width="68" 
+                Orientation="Vertical" Maximum="100"
+                Value="{Binding CurrentVolume}"
+                vm:SliderExtension.DragCompletedCommand="{Binding SliderVolumeChanged}"/>
+
+    </Grid>
+</Window>
