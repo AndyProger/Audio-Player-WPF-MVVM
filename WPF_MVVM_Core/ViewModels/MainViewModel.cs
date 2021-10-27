@@ -23,27 +23,31 @@ namespace WPF_MVVM_Core.ViewModels
         public ICommand ClickPlaySong { get => new DelegateCommand(() => PlaySong()); }
         public ICommand ClickPlayNext { get => new DelegateCommand(() => PlayNext()); }
         public ICommand ClickPlayPrevious { get => new DelegateCommand(() => PlayPrevious()); }
-        public ICommand SliderChanged { get => new DelegateCommand(() => SetNewTimeOfPlayingSong()); }
+        public ICommand SliderChanged { get => new DelegateCommand(() => _timer.Start()); }
         public ICommand SliderStartedChanged { get => new DelegateCommand(() => _timer.Stop()); }
+        public ICommand SelectionChanged { get => new DelegateCommand(() => SetToZeroTimeSong()); }
+
+        public void SetToZeroTimeSong()
+        {
+            if(Player.Current is not null && !(Player.CurrentTime == TimeSpan.Zero))
+            {
+                PercentOfCurrentDurationOfSong = 0;
+                PlaySong();
+            }
+        }
 
         public MainViewModel()
         {
-            _timer.Interval = TimeSpan.FromSeconds(0.5);
+            _timer.Interval = TimeSpan.FromSeconds(0.1);
             _timer.Tick += _timer_Tick;
             _timer.Start();
         }
 
-        private void SetNewTimeOfPlayingSong()
+        private bool IsTimeSlideChanged()
         {
-            if (Player.Current is not null)
-            {
-                Player.CurrentTime = TimeSpan.FromSeconds(PercentOfCurrentDurationOfSong / 1000.0 * Player.TotalDuration.TotalSeconds);
-                _timer.Start();
-            }
-            else
-            {
-                PercentOfCurrentDurationOfSong = 0.0f;
-            }
+            return !(Player.CurrentTime < TimeSpan.FromSeconds(0.05)) &&
+                ((Math.Truncate(PercentOfCurrentDurationOfSong) > Math.Truncate((float)Player.PercentOfCurrentDuration) + 10) ||
+                Math.Truncate(PercentOfCurrentDurationOfSong) + 10 < Math.Truncate((float)Player.PercentOfCurrentDuration));
         }
 
         private void _timer_Tick(object sender, EventArgs e)
@@ -51,12 +55,18 @@ namespace WPF_MVVM_Core.ViewModels
             if (Player.IsPaused)
                 return;
 
-            PercentOfCurrentDurationOfSong = (float)Player.PercentOfCurrentDuration;
-            CurrentTimeOfPlayingSong = Player.CurrentTime;
-            Player.Volume = CurrentVolume / 100.0f;
-
             if (Player.CurrentTime > Player.TotalDuration)
                 PlayNext();
+
+            if (IsTimeSlideChanged())
+            {
+                Player.CurrentTime = TimeSpan.FromSeconds(PercentOfCurrentDurationOfSong / 1000.0 * Player.TotalDuration.TotalSeconds);
+            }
+
+            PercentOfCurrentDurationOfSong = (float)Player.PercentOfCurrentDuration;
+
+            CurrentTimeOfPlayingSong = Player.CurrentTime;
+            Player.Volume = CurrentVolume / 100.0f;
         }
 
         private void AddSongClick()
@@ -86,9 +96,11 @@ namespace WPF_MVVM_Core.ViewModels
         {
             if(SelectedSong is not null)
             {
-                Player.Current = SelectedSong;
+                //Player.Current = SelectedSong;
                 Player.PlayNextSong();
                 SelectedSong = Player.Current;
+                PercentOfCurrentDurationOfSong = 0;
+                Player.CurrentTime = TimeSpan.Zero;
             }
         }
 
@@ -96,9 +108,11 @@ namespace WPF_MVVM_Core.ViewModels
         {
             if (SelectedSong is not null)
             {
-                Player.Current = SelectedSong;
+                //Player.Current = SelectedSong;
                 Player.PlayPreviousSong();
                 SelectedSong = Player.Current;
+                PercentOfCurrentDurationOfSong = 0;
+                Player.CurrentTime = TimeSpan.Zero;
             }
         }
     }

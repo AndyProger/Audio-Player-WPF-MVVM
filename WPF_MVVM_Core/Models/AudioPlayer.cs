@@ -31,7 +31,7 @@ namespace WPF_MVVM_Core.Models
             set => _outputStream.CurrentTime = value;
         }
 
-        public TimeSpan TotalDuration { get => _outputStream.TotalTime - TimeSpan.FromSeconds(0.5); }
+        public TimeSpan TotalDuration { get => _outputStream.TotalTime - TimeSpan.FromSeconds(1); }
 
         private WaveStream _outputStream;
         private WaveChannel32 _volumeStream;
@@ -48,7 +48,10 @@ namespace WPF_MVVM_Core.Models
         {
             if (File.Exists(filePath))
             {
-                SongList.Add(new SongInfo(filePath));
+                SongInfo song = new SongInfo(filePath);
+
+                if(!SongList.Contains(song))
+                    SongList.Add(song);
             }
             else
             {
@@ -81,6 +84,7 @@ namespace WPF_MVVM_Core.Models
             if (_outputStream != null)
             {
                 _player.Stop();
+                CurrentTime = TimeSpan.Zero;
             }
 
             Current = song;

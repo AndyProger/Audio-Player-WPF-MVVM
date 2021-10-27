@@ -4,7 +4,7 @@ using DevExpress.Mvvm;
 
 namespace WPF_MVVM_Core.Models
 {
-    class SongInfo : ViewModelBase
+    class SongInfo : ViewModelBase, IEquatable<SongInfo>
     {
         public string SongName { get; set; }
         public string Artist { get; set; }
@@ -20,5 +20,7 @@ namespace WPF_MVVM_Core.Models
             Duration = tags.Properties.Duration;
             MusicPath = path;
         }
+
+        public bool Equals(SongInfo other) => MusicPath == other.MusicPath;
     }
 }
