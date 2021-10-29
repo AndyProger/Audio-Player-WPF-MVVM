@@ -62,7 +62,11 @@ namespace WPF_MVVM_Core.Models
         public void PlaySong(SongInfo song)
         {
             if (song is null)
-                throw new ArgumentNullException();
+            {
+                _player.Stop();
+                IsPaused = true;
+                return;
+            }
 
             // если выбрана та же песня и она не на паузе => пауза
             if (_outputStream != null && Current.MusicPath == song.MusicPath && !IsPaused)

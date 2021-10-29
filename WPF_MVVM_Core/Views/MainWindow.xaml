@@ -4,67 +4,235 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:local="clr-namespace:WPF_MVVM_Core"
+        xmlns:local="clr-namespace:Views.WPF_MVVM_Core"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:vm="clr-namespace:WPF_MVVM_Core.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="399" Width="732">
+        Title="Audio Player" Height="500" Width="955"
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+              TextElement.FontWeight="Regular"
+              TextElement.FontSize="13"
+              TextOptions.TextFormattingMode="Ideal"
+              TextOptions.TextRenderingMode="Auto"
+              Background="{x:Null}"
+              FontFamily="{DynamicResource MaterialDesignFont}" 
+              WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" BorderBrush="#FF0C0909">
 
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
 
+    <Window.Resources>
+        <local:ThicknessMultiplyingConverter x:Key="TMult"/>
+    </Window.Resources>
+   
     <Grid>
-        <ListView HorizontalAlignment="Left" Height="269" 
-                  Margin="10,10,0,0" VerticalAlignment="Top" Width="519" 
-                  ItemsSource="{Binding Player.SongList}" SelectedItem="{Binding SelectedSong}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectionChanged}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Artist" Width="150" DisplayMemberBinding="{Binding Artist}" />
-                    <GridViewColumn Header="Title" Width="238" DisplayMemberBinding="{Binding SongName}" />
-                    <GridViewColumn Header="Duration" Width="50" DisplayMemberBinding="{Binding Duration, StringFormat={}{0:mm':'ss}}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Grid.RowDefinitions>
+        </Grid.RowDefinitions>
+        <Grid Background="DimGray" Name="BottomGrid" Margin="564,30,-208,20" Height="300" Width="300"/>
+        <Grid>
+            <materialDesign:Card VerticalContentAlignment="Stretch" Background="#FF622890" Margin="0,0,0,-52">
 
-        <Button Content="Add Songs" 
-                Margin="588,14,69,328"
-                Command="{Binding ClickAddSong}"/>
+                <Grid>
+                    <materialDesign:Card UniformCornerRadius="10" Margin="33,34,493,65">
+                        <materialDesign:Card.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <LinearGradientBrush.Transform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform Angle="-35"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.Transform>
+                                <GradientStop Color="#FFB92097" Offset="0.052"/>
+                                <GradientStop Color="Red" Offset="1"/>
+                            </LinearGradientBrush>
+                        </materialDesign:Card.Background>
 
-        <Button Content="|>" 
-            Margin="210,329,443,10"
-            Command="{Binding ClickPlaySong}"/>
+                        <Grid>
 
-        <Button Content="right" 
-            Margin="350,329,295,10"
-             Command="{Binding ClickPlayNext}"/>
+                            <Slider HorizontalAlignment="Center" Margin="0,291,0,0" 
+                            VerticalAlignment="Top" Height="23" Width="380" 
+                            Maximum="1000" IsMoveToPointEnabled="True"
+                            Value="{Binding PercentOfCurrentDurationOfSong, Mode=TwoWay}"
+                            vm:SliderExtension.DragCompletedCommand="{Binding SliderStartedChanged}"
+                            Focusable="False"
+                            vm:SliderExtensionCompleted.DragStartedCommand="{Binding SliderChanged}" Foreground="White" BorderBrush="White" Cursor="Hand"/>
 
-        <Button Content="left" 
-            Margin="64,329,581,10"
-            Command="{Binding ClickPlayPrevious}"/>
+                            <Button Margin="157,343,157,26"
+                        Command="{Binding ClickPlaySong}" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0,0,0,0" Width="26">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Kind="Play" Height="64" Width="44" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#DDFFFFFF" Cursor="Hand"/>
+                                </Button.Content>
+                            </Button>
 
-        <Slider HorizontalAlignment="Left" Margin="10,291,0,0" 
-                VerticalAlignment="Top" Height="38" Width="519" 
-                Maximum="1000" IsMoveToPointEnabled="True"
-                Value="{Binding PercentOfCurrentDurationOfSong, Mode=TwoWay}"
-                vm:SliderExtension.DragCompletedCommand="{Binding SliderStartedChanged}"
-                vm:SliderExtensionCompleted.DragStartedCommand="{Binding SliderChanged}"
-                >
-        </Slider>
+                            <Button Margin="244,343,131,26"
+                        Command="{Binding ClickPlayNext}" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0,0,0,0" Width="26">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Kind="SkipNext" Height="64" Width="44" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#DDFFFFFF" Cursor="Hand"/>
+                                </Button.Content>
+                            </Button>
 
-        <TextBlock Text="{Binding CurrentTimeOfPlayingSong, StringFormat={}{0:mm':'ss}}" HorizontalAlignment="Left" 
-               Margin="534,283,0,0" VerticalAlignment="Top" 
-               Width="57" Height="32" FontSize="20"/>
+                            <Button Margin="129,343,246,26"
+                            Command="{Binding ClickPlayPrevious}" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0,0,0,0" Width="26">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Kind="SkipPrevious" Height="64" Width="44" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#DDFFFFFF" Cursor="Hand"/>
+                                </Button.Content>
+                            </Button>
 
-        <Slider HorizontalAlignment="Left" Margin="558,60,0,0" 
-                VerticalAlignment="Top" Height="219" Width="68" 
-                Orientation="Vertical" Maximum="100"
-                Value="{Binding CurrentVolume}"
-                vm:SliderExtension.DragCompletedCommand="{Binding SliderVolumeChanged}"/>
+                            <Ellipse Margin="98,37,98,165" materialDesign:ShadowAssist.ShadowDepth="Depth4">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding DefaultAlbumCover}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
 
+                            <Ellipse Margin="98,37,98,165" materialDesign:ShadowAssist.ShadowDepth="Depth4">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding SelectedSong.AlbumCover}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+
+                            <TextBlock Text="{Binding SelectedSong.SongName}" Margin="38,253,39,126" TextAlignment="Center" Foreground="#DDFFFFFF" FontSize="14"></TextBlock>
+                            <TextBlock Text="{Binding SelectedSong.Artist}" Margin="268,444,-192,-65" TextAlignment="Center" Foreground="#DDFFFFFF" FontSize="12"></TextBlock>
+
+                            <Slider HorizontalAlignment="Left" Margin="364,37,0,0" 
+                            VerticalAlignment="Top" Height="178" Width="26" 
+                            Orientation="Vertical" Maximum="100"
+                            Style="{StaticResource MaterialDesignDiscreteSlider}"
+                            Value="{Binding CurrentVolume}"
+                            Focusable="False"
+                            vm:SliderExtension.DragCompletedCommand="{Binding SliderVolumeChanged}" Foreground="White" Cursor="Hand"/>
+
+                            <materialDesign:PackIcon Kind="Audio" Margin="354,224,0,0" Height="33" Width="40" Foreground="#DDFFFFFF"/>
+
+                            <materialDesign:PopupBox Margin="10,10,0,341" Width="30" Foreground="#DDFFFFFF" PopupVerticalOffset="5" Cursor="Hand">
+                                <ListBox>
+                                    <ListBoxItem Cursor="Hand" Padding="0">
+                                        <Button Content="Get Info"
+                                                Command="{Binding ShowDialogCommand}"
+                                                CommandParameter="{x:Type local:SongInfoDialogWindow}" Height="50" Width="100" Focusable="False"/>
+                                    </ListBoxItem>
+                                    <ListBoxItem Cursor="Hand">Remove song</ListBoxItem>
+                                </ListBox>
+                            </materialDesign:PopupBox>
+
+                            <TextBlock Text="{Binding CurrentTimeOfPlayingSong, StringFormat={}{0:mm':'ss}}" HorizontalAlignment="Left" 
+                               Margin="354,314,0,0" VerticalAlignment="Top" 
+                               Width="40" Height="18" FontSize="15" Foreground="#DDFFFFFF"/>
+
+                        </Grid>
+                    </materialDesign:Card>
+
+                    <materialDesign:Card UniformCornerRadius="12" Margin="524,34,35,65">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="8*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <ToggleButton IsChecked="{Binding Tag, ElementName=MeasureGrid}" Margin="152,6,147,6" Cursor="Hand"/>
+                            <TextBlock Text="Current Playlist" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10,11,0,6"/>
+                            <Button Content="Add Songs" 
+                            Margin="239,5,10,6"
+                            Command="{Binding ClickAddSong}"/>
+                            <ScrollViewer VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="1">
+                                <ListView ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  ItemsSource="{Binding Player.SongList}" SelectedItem="{Binding SelectedSong}" Cursor="">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding SelectionChanged}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Cursor="Hand">
+                                                <Ellipse Height="30" Width="30" Margin="5,0,0,0">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding AlbumCover}"/>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding SongName}" Width="250" FontSize="13" VerticalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{Binding Artist}" FontSize="11" Margin="10,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Duration, StringFormat={}{0:mm':'ss}}" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </ScrollViewer>
+                        </Grid>
+                    </materialDesign:Card>
+
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+        <Grid Margin="0,0,50,0" Height="0" Width="1000" Name="OffsetBottomGrid"/>
+
+        <Grid Name="MeasureGrid" Height="0" Width="1.5">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <Trigger Property="Tag">
+                            <Trigger.Value>
+                                <sys:Boolean>False</sys:Boolean>
+                            </Trigger.Value>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" To="1" Duration="0:0:0.5">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuarticEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.5">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuarticEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
+
+        <Grid Height="300" Width="{Binding ActualWidth, ElementName=BottomGrid}" Background="#FF51B9AC">
+            <Grid.Margin>
+                <MultiBinding Converter="{StaticResource TMult}">
+                    <Binding Path="ActualWidth" ElementName="OffsetBottomGrid"/>
+                    <Binding Path="ActualWidth" ElementName="MeasureGrid"/>
+                </MultiBinding>
+            </Grid.Margin>
+            <DataGrid ItemsSource="{Binding Playlists}" SelectedItem="{Binding CurrentPlaylist, Mode=TwoWay}" AutoGenerateColumns="False" Focusable="False" Margin="0,25,0,0" SelectionMode="Single" SelectionUnit="FullRow" Background="#FF51B9AC">
+                
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove Playlist"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectionPlaylistChanged}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Foreground="#FF282828" Binding="{Binding Name}" MaxWidth="200" FontSize="14"/>
+                    <DataGridTextColumn Foreground="#FF282828" Binding="{Binding SongList.Count, StringFormat='Songs {0}'}" IsReadOnly="True" Selector.IsSelected="True" FontSize="14" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button Content="Creat Playlist" Margin="87,-231,87,10" Command="{Binding CreatePlaylist}"/>
+        </Grid>
     </Grid>
 </Window>
