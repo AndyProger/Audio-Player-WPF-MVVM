@@ -1,16 +1,15 @@
 ﻿using System;
 using System.IO;
-using System.Collections.ObjectModel;
-using NAudio.Wave;
 using System.Linq;
-using DevExpress.Mvvm;
+using NAudio.Wave;
+using System.Collections.ObjectModel;
 
-namespace WPF_MVVM_Core.Models
+namespace Player.Models
 {
-    class AudioPlayer : ViewModelBase
+    class AudioPlayer
     {
         public ObservableCollection<SongInfo> SongList { get; set; } = new ObservableCollection<SongInfo>();
-        // from 0 to 1.0
+        
         public float Volume
         {
             get => _player.Volume;
@@ -18,7 +17,6 @@ namespace WPF_MVVM_Core.Models
             set => _player.Volume = value;
         }
         public SongInfo Current { get; set; }
-
         public double PercentOfCurrentDuration
         {
             get => _outputStream.CurrentTime.TotalSeconds * 1000.0 / _outputStream.TotalTime.TotalSeconds;
@@ -32,11 +30,11 @@ namespace WPF_MVVM_Core.Models
         }
 
         public TimeSpan TotalDuration { get => _outputStream.TotalTime - TimeSpan.FromSeconds(1); }
+        public bool IsPaused { get; private set; } = true;
 
         private WaveStream _outputStream;
         private WaveChannel32 _volumeStream;
         private WaveOutEvent _player;
-        public bool IsPaused { get; private set; } = true;
 
         public AudioPlayer()
         {
@@ -44,6 +42,10 @@ namespace WPF_MVVM_Core.Models
             Volume = 0.3f;
         }
 
+        /// <summary>
+        /// Добавить новую песню в список
+        /// </summary>
+        /// <param name="filePath">Путь к песне</param>
         public void AddSong(string filePath)
         {
             if (File.Exists(filePath))
@@ -59,6 +61,12 @@ namespace WPF_MVVM_Core.Models
             }
         }
 
+        /// <summary>
+        /// Воспроизвести песню, если песня уже играет => пауза,
+        /// если песня на паузе => воспроизвидение с того же места,
+        /// если выбрана другая песня => воспроизведение с начала
+        /// </summary>
+        /// <param name="song">Песня</param>
         public void PlaySong(SongInfo song)
         {
             if (song is null)
@@ -101,9 +109,13 @@ namespace WPF_MVVM_Core.Models
             IsPaused = false;
         }
 
-        // воспроизвести следующую песню (принцип кольцевой очереди)
+        /// <summary>
+        /// Воспроизвести следующую песню (принцип кольцевой очереди)
+        /// </summary>
         public void PlayNextSong() => PlayPreviousOrNextSong(true);
-        // воспроизвести предидущую песню (принцип кольцевой очереди)
+        /// <summary>
+        /// Воспроизвести предидущую песню (принцип кольцевой очереди)
+        /// </summary>
         public void PlayPreviousSong() => PlayPreviousOrNextSong(false);
 
         private void PlayPreviousOrNextSong(bool isNextMode)

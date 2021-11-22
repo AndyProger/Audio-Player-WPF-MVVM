@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Views.WPF_MVVM_Core
+namespace Views.Player
 {
     /// <summary>
     /// Логика взаимодействия для SongInfoDialogWindow.xaml

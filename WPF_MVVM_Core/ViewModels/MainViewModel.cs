@@ -1,24 +1,25 @@
-﻿using System.Windows.Input;
-using System.Windows.Forms;
-using DevExpress.Mvvm;
-using WPF_MVVM_Core.Models;
-using System.Windows.Threading;
-using System.Collections.ObjectModel;
-using System.Windows.Media.Imaging;
-using System;
+﻿using System;
 using System.Linq;
-using WPF_MVVM_Core.Services;
+using DevExpress.Mvvm;
+using System.Windows.Input;
+using System.Windows.Forms;
+using Player.Models;
+using Player.Services;
+using System.Windows.Threading;
+using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
 
-namespace WPF_MVVM_Core.ViewModels
+namespace Player.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
         public AudioPlayer Player { get; set; } = new AudioPlayer();
         public Playlist CurrentPlaylist { get; set; } = new Playlist();
+        public ObservableCollection<SongInfo> CurrentSongList { get; set; } = new ObservableCollection<SongInfo>();
+        public ObservableCollection<Playlist> Playlists { get; set; } = new ObservableCollection<Playlist>();
         public SongInfo SelectedSong { get; set; }
         public static SongInfo SelectedSongInfo { get; set; }
-        public ObservableCollection<Playlist> Playlists { get; set; } = new ObservableCollection<Playlist>();
-        public BitmapImage DefaultAlbumCover { get; set; } = new BitmapImage(new Uri(@"C:\Users\Andrey\Desktop\def.png"));
+        public BitmapImage DefaultAlbumCover { get; set; } = new BitmapImage(new Uri("def.png", UriKind.RelativeOrAbsolute));
         public float PercentOfCurrentDurationOfSong { get; set; }
         public TimeSpan CurrentTimeOfPlayingSong { get; set; }
         public float CurrentVolume { get; set; } = 30;
@@ -45,6 +46,7 @@ namespace WPF_MVVM_Core.ViewModels
         public void ChangePlaylist()
         {
             Player.SongList = CurrentPlaylist.SongList;
+            CurrentSongList = CurrentPlaylist.SongList;
             PercentOfCurrentDurationOfSong = 0;
             SelectedSong = null;
             Player.PlaySong(SelectedSong);
@@ -72,7 +74,7 @@ namespace WPF_MVVM_Core.ViewModels
             ShowDialogCommand = new OpenWindowCommand();
 
             _timer.Interval = TimeSpan.FromSeconds(0.1);
-            _timer.Tick += _timer_Tick;
+            _timer.Tick += TimerTick;
             _timer.Start();
         }
 
@@ -83,7 +85,7 @@ namespace WPF_MVVM_Core.ViewModels
                 Math.Truncate(PercentOfCurrentDurationOfSong) + 10 < Math.Truncate((float)Player.PercentOfCurrentDuration));
         }
 
-        private void _timer_Tick(object sender, EventArgs e)
+        private void TimerTick(object sender, EventArgs e)
         {
             if (Player.IsPaused)
                 return;
@@ -115,12 +117,16 @@ namespace WPF_MVVM_Core.ViewModels
                     Player.AddSong(filename);
                 }
             }
+
+            CurrentPlaylist.SongList = Player.SongList;
+            CurrentSongList = Player.SongList; 
         }
 
         private void SortSongs()
         {
             Player.SongList = new ObservableCollection<SongInfo>(Player.SongList.OrderBy(x => x.SongName).ToList());
             CurrentPlaylist.SongList = Player.SongList;
+            CurrentSongList = Player.SongList;
         }
 
         private void PlaySong()
@@ -135,7 +141,6 @@ namespace WPF_MVVM_Core.ViewModels
         {
             if(SelectedSong is not null)
             {
-                //Player.Current = SelectedSong;
                 Player.PlayNextSong();
                 SelectedSong = Player.Current;
 
@@ -153,7 +158,6 @@ namespace WPF_MVVM_Core.ViewModels
         {
             if (SelectedSong is not null)
             {
-                //Player.Current = SelectedSong;
                 Player.PlayPreviousSong();
                 SelectedSong = Player.Current;
 

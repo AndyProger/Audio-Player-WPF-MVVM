@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
-namespace WPF_MVVM_Core.Models
+namespace Player.Models
 {
+    /// <summary>
+    /// Класс для объединения песен в рамках одной именованной сущности - плейлист
+    /// </summary>
     class Playlist
     {
         public string Name { get; set; }

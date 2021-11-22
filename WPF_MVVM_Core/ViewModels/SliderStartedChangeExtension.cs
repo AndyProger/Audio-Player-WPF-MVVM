@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace WPF_MVVM_Core.ViewModels
+namespace Player.ViewModels
 {
     /// <summary>
     /// Класс позволяющий отслеживать начало изменения слайдера не нарушая паттерн MVVM

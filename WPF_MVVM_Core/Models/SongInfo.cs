@@ -4,8 +4,11 @@ using System.IO;
 using DevExpress.Mvvm;
 using System.Windows.Media.Imaging;
 
-namespace WPF_MVVM_Core.Models
+namespace Player.Models
 {
+    /// <summary>
+    /// Класс для хранения информации о песни, включая путь к песне
+    /// </summary>
     class SongInfo : ViewModelBase, IEquatable<SongInfo>
     {
         public string SongName { get; set; }
@@ -13,10 +16,14 @@ namespace WPF_MVVM_Core.Models
         public string AlbumTitle { get; set; }
         public string Genre { get; set; }
         public uint? IssueYear { get; set; }
-        public TimeSpan Duration { get; set; }
         public string MusicPath { get; private set; }
+        public TimeSpan Duration { get; set; }
         public BitmapImage AlbumCover { get; private set; }
 
+        /// <summary>
+        /// Конструктор извлекающий информацию о песне
+        /// </summary>
+        /// <param name="path">Путь к песне</param>
         public SongInfo(string path)
         {
             TagLib.File tags = TagLib.File.Create(path);
@@ -35,6 +42,10 @@ namespace WPF_MVVM_Core.Models
 
         public SongInfo(SongInfo song) : this(song.MusicPath) { }
 
+        /// <summary>
+        /// Получить обложку альбома песни, если обложки нет, то возвращает обложку по умолчанию
+        /// </summary>
+        /// <returns>Обложку альбома</returns>
         private BitmapImage GetAlbumCover(TagLib.File tags)
         {
             BitmapImage bitmap = new BitmapImage();
@@ -51,7 +62,7 @@ namespace WPF_MVVM_Core.Models
             catch
             {
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri(@"C:\Users\Andrey\Desktop\def.png");
+                bitmap.UriSource = new Uri("def.png", UriKind.RelativeOrAbsolute);
                 bitmap.EndInit();
             }
 

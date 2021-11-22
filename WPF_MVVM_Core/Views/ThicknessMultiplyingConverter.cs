@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
 
-namespace Views.WPF_MVVM_Core
+namespace Views.Player
 {
     /// <summary>
     /// Вспомогательный класс для анимации списка плейлистов

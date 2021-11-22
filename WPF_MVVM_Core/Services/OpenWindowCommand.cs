@@ -3,7 +3,7 @@ using System.Windows;
 using System.Reflection;
 using System.Windows.Input;
 
-namespace WPF_MVVM_Core.Services
+namespace Player.Services
 {
     /// <summary>
     /// Сервис создания модальных окон

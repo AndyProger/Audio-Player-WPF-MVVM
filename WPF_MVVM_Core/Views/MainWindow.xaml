@@ -1,13 +1,13 @@
-﻿<Window x:Class="Views.WPF_MVVM_Core.MainWindow"
+﻿<Window x:Class="Views.Player.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:local="clr-namespace:Views.WPF_MVVM_Core"
+        xmlns:local="clr-namespace:Views.Player"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:vm="clr-namespace:WPF_MVVM_Core.ViewModels"
+        xmlns:vm="clr-namespace:Player.ViewModels"
         mc:Ignorable="d"
         Title="Audio Player" Height="500" Width="955"
         
@@ -148,7 +148,7 @@
                             Margin="145,7,155,8"
                             Command="{Binding ClickSort}"/>
                             <ScrollViewer VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="1">
-                                <ListView ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  ItemsSource="{Binding Player.SongList}" SelectedItem="{Binding SelectedSong}" Cursor="">
+                                <ListView ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  ItemsSource="{Binding CurrentSongList}" SelectedItem="{Binding SelectedSong}" Cursor="">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SelectionChanged}"/>
