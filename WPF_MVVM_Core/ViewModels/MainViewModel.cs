@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System;
+using System.Linq;
 using WPF_MVVM_Core.Services;
 
 namespace WPF_MVVM_Core.ViewModels
@@ -13,7 +14,7 @@ namespace WPF_MVVM_Core.ViewModels
     class MainViewModel : ViewModelBase
     {
         public AudioPlayer Player { get; set; } = new AudioPlayer();
-        public Playlist CurrentPlaylist { get; set; }
+        public Playlist CurrentPlaylist { get; set; } = new Playlist();
         public SongInfo SelectedSong { get; set; }
         public static SongInfo SelectedSongInfo { get; set; }
         public ObservableCollection<Playlist> Playlists { get; set; } = new ObservableCollection<Playlist>();
@@ -34,6 +35,7 @@ namespace WPF_MVVM_Core.ViewModels
         public ICommand SelectionChanged { get => new DelegateCommand(() => SetToZeroTimeSong()); }
         public ICommand CreatePlaylist { get => new DelegateCommand(() => AddPlaylist()); }
         public ICommand SelectionPlaylistChanged { get => new DelegateCommand(() => ChangePlaylist()); }
+        public ICommand ClickSort { get => new DelegateCommand(() => SortSongs()); }
 
         public void AddPlaylist()
         {
@@ -114,6 +116,12 @@ namespace WPF_MVVM_Core.ViewModels
                     Player.AddSong(filename);
                 }
             }
+        }
+
+        private void SortSongs()
+        {
+            Player.SongList = new ObservableCollection<SongInfo>(Player.SongList.OrderBy(x => x.SongName).ToList());
+            CurrentPlaylist.SongList = Player.SongList;
         }
 
         private void PlaySong()

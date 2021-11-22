@@ -12,6 +12,11 @@ namespace WPF_MVVM_Core.Models
         public string Name { get; set; }
         public ObservableCollection<SongInfo> SongList { get; set; } = new ObservableCollection<SongInfo>();
 
+        public Playlist()
+        {
+            Name = string.Empty;
+        }
+
         public Playlist(string name, ObservableCollection<SongInfo> songList)
         {
             Name = name;

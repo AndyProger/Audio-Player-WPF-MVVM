@@ -28,13 +28,19 @@
     <Window.Resources>
         <local:ThicknessMultiplyingConverter x:Key="TMult"/>
     </Window.Resources>
-   
+
     <Grid>
         <Grid.RowDefinitions>
         </Grid.RowDefinitions>
         <Grid Background="DimGray" Name="BottomGrid" Margin="564,30,-208,20" Height="300" Width="300"/>
         <Grid>
-            <materialDesign:Card VerticalContentAlignment="Stretch" Background="#FF622890" Margin="0,0,0,-52">
+            <materialDesign:Card VerticalContentAlignment="Stretch" Margin="0,0,0,-52">
+                <materialDesign:Card.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFBF49E0"/>
+                        <GradientStop Color="#FF57C8C2" Offset="1"/>
+                    </LinearGradientBrush>
+                </materialDesign:Card.Background>
 
                 <Grid>
                     <materialDesign:Card UniformCornerRadius="10" Margin="33,34,493,65">
@@ -54,6 +60,7 @@
                         </materialDesign:Card.Background>
 
                         <Grid>
+                            
 
                             <Slider HorizontalAlignment="Center" Margin="0,291,0,0" 
                             VerticalAlignment="Top" Height="23" Width="380" 
@@ -96,8 +103,8 @@
                                 </Ellipse.Fill>
                             </Ellipse>
 
-                            <TextBlock Text="{Binding SelectedSong.SongName}" Margin="38,253,39,126" TextAlignment="Center" Foreground="#DDFFFFFF" FontSize="14"></TextBlock>
-                            <TextBlock Text="{Binding SelectedSong.Artist}" Margin="268,444,-192,-65" TextAlignment="Center" Foreground="#DDFFFFFF" FontSize="12"></TextBlock>
+                            <TextBlock Text="{Binding SelectedSong.SongName}" Margin="38,264,39,115" TextAlignment="Center" Foreground="#DDFFFFFF" FontSize="14"></TextBlock>
+                            <TextBlock Text="{Binding SelectedSong.Artist}" Margin="271,439,-195,-60" TextAlignment="Center" Foreground="#DDFFFFFF" FontSize="12"></TextBlock>
 
                             <Slider HorizontalAlignment="Left" Margin="364,37,0,0" 
                             VerticalAlignment="Top" Height="178" Width="26" 
@@ -116,7 +123,6 @@
                                                 Command="{Binding ShowDialogCommand}"
                                                 CommandParameter="{x:Type local:SongInfoDialogWindow}" Height="50" Width="100" Focusable="False"/>
                                     </ListBoxItem>
-                                    <ListBoxItem Cursor="Hand">Remove song</ListBoxItem>
                                 </ListBox>
                             </materialDesign:PopupBox>
 
@@ -133,11 +139,14 @@
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition Height="8*"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <ToggleButton IsChecked="{Binding Tag, ElementName=MeasureGrid}" Margin="152,6,147,6" Cursor="Hand"/>
-                            <TextBlock Text="Current Playlist" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10,11,0,6"/>
+                            <ToggleButton IsChecked="{Binding Tag, ElementName=MeasureGrid}" Margin="80,6,246,6" Cursor="Hand"/>
+                            <TextBlock Text="Playlist" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10,11,0,6"/>
                             <Button Content="Add Songs" 
-                            Margin="239,5,10,6"
+                            Margin="246,7,17,8"
                             Command="{Binding ClickAddSong}"/>
+                            <Button Content="Sort" 
+                            Margin="145,7,155,8"
+                            Command="{Binding ClickSort}"/>
                             <ScrollViewer VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="1">
                                 <ListView ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  ItemsSource="{Binding Player.SongList}" SelectedItem="{Binding SelectedSong}" Cursor="">
                                     <i:Interaction.Triggers>
@@ -215,13 +224,6 @@
                 </MultiBinding>
             </Grid.Margin>
             <DataGrid ItemsSource="{Binding Playlists}" SelectedItem="{Binding CurrentPlaylist, Mode=TwoWay}" AutoGenerateColumns="False" Focusable="False" Margin="0,25,0,0" SelectionMode="Single" SelectionUnit="FullRow" Background="#FF51B9AC">
-                
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Remove Playlist"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding SelectionPlaylistChanged}"/>
