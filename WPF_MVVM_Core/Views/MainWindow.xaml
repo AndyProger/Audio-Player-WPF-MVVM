@@ -66,9 +66,9 @@
                             VerticalAlignment="Top" Height="23" Width="380" 
                             Maximum="1000" IsMoveToPointEnabled="True"
                             Value="{Binding PercentOfCurrentDurationOfSong, Mode=TwoWay}"
-                            vm:SliderExtension.DragCompletedCommand="{Binding SliderStartedChanged}"
+                            vm:SliderCompletedChangeExtension.DragCompletedCommand="{Binding SliderStartedChanged}"
                             Focusable="False"
-                            vm:SliderExtensionCompleted.DragStartedCommand="{Binding SliderChanged}" Foreground="White" BorderBrush="White" Cursor="Hand"/>
+                            vm:SliderStartedChangeExtension.DragStartedCommand="{Binding SliderChanged}" Foreground="White" BorderBrush="White" Cursor="Hand"/>
 
                             <Button Margin="157,343,157,26"
                         Command="{Binding ClickPlaySong}" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0,0,0,0" Width="26">
@@ -112,7 +112,7 @@
                             Style="{StaticResource MaterialDesignDiscreteSlider}"
                             Value="{Binding CurrentVolume}"
                             Focusable="False"
-                            vm:SliderExtension.DragCompletedCommand="{Binding SliderVolumeChanged}" Foreground="White" Cursor="Hand"/>
+                            vm:SliderCompletedChangeExtension.DragCompletedCommand="{Binding SliderVolumeChanged}" Foreground="White" Cursor="Hand"/>
 
                             <materialDesign:PackIcon Kind="Audio" Margin="354,224,0,0" Height="33" Width="40" Foreground="#DDFFFFFF"/>
 

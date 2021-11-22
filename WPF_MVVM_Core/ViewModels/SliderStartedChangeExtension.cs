@@ -1,16 +1,19 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 
 namespace WPF_MVVM_Core.ViewModels
 {
-    internal class SliderExtensionCompleted
+    /// <summary>
+    /// Класс позволяющий отслеживать начало изменения слайдера не нарушая паттерн MVVM
+    /// </summary>
+    internal class SliderStartedChangeExtension
     {
         public static readonly DependencyProperty DragStartedCommandProperty = DependencyProperty.RegisterAttached(
             "DragStartedCommand",
             typeof(ICommand),
-            typeof(SliderExtensionCompleted),
+            typeof(SliderStartedChangeExtension),
             new PropertyMetadata(default(ICommand), OnDragStartedCommandChanged));
 
         private static void OnDragStartedCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

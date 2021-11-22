@@ -1,16 +1,20 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 
 namespace WPF_MVVM_Core.ViewModels
 {
-    internal class SliderExtension
+    /// <summary>
+    /// Класс позволяющий отследить конец изменение слайдера не нарушая паттерн MVVM
+    /// (момент отпускания слайдера)
+    /// </summary>
+    internal class SliderCompletedChangeExtension
     {
         public static readonly DependencyProperty DragCompletedCommandProperty = DependencyProperty.RegisterAttached(
             "DragCompletedCommand",
             typeof(ICommand),
-            typeof(SliderExtension),
+            typeof(SliderCompletedChangeExtension),
             new PropertyMetadata(default(ICommand), OnDragCompletedCommandChanged));
 
         private static void OnDragCompletedCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

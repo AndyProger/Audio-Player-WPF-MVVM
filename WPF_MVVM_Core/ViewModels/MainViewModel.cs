@@ -67,14 +67,13 @@ namespace WPF_MVVM_Core.ViewModels
 
         public MainViewModel()
         {
-            Playlists.Add(new Playlist("Main",Player.SongList));
+            Playlists.Add(new Playlist("Main", Player.SongList));
 
             ShowDialogCommand = new OpenWindowCommand();
 
             _timer.Interval = TimeSpan.FromSeconds(0.1);
             _timer.Tick += _timer_Tick;
             _timer.Start();
-
         }
 
         private bool IsTimeSlideChanged()

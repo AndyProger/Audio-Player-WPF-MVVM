@@ -6,6 +6,9 @@ using System.Globalization;
 
 namespace Views.WPF_MVVM_Core
 {
+    /// <summary>
+    /// Вспомогательный класс для анимации списка плейлистов
+    /// </summary>
     class ThicknessMultiplyingConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter,
