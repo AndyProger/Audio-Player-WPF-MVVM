@@ -2,13 +2,12 @@
 using System.IO;
 using System.Linq;
 using NAudio.Wave;
-using System.Collections.ObjectModel;
 
 namespace Player.Models
 {
     class AudioPlayer
     {
-        public ObservableCollection<SongInfo> SongList { get; set; } = new ObservableCollection<SongInfo>();
+        public Playlist Songs { get; set; } = new Playlist();
         
         public float Volume
         {
@@ -52,8 +51,8 @@ namespace Player.Models
             {
                 SongInfo song = new SongInfo(filePath);
 
-                if(!SongList.Contains(song))
-                    SongList.Add(song);
+                if(!Songs.SongList.Contains(song))
+                    Songs.SongList.Add(song);
             }
             else
             {
@@ -120,15 +119,15 @@ namespace Player.Models
 
         private void PlayPreviousOrNextSong(bool isNextMode)
         {
-            if (!SongList.Any())
+            if (!Songs.SongList.Any())
                 return;
 
-            var indexOfCurrentSong = SongList.IndexOf(Current);
+            var indexOfCurrentSong = Songs.SongList.IndexOf(Current);
             var nextIndex = 0;
 
             if (isNextMode)
             {
-                if (indexOfCurrentSong != SongList.Count - 1)
+                if (indexOfCurrentSong != Songs.SongList.Count - 1)
                     nextIndex = indexOfCurrentSong + 1;
             }
             else
@@ -136,7 +135,7 @@ namespace Player.Models
                 nextIndex = indexOfCurrentSong - 1;
 
                 if (indexOfCurrentSong <= 0)
-                    nextIndex = SongList.Count - 1;
+                    nextIndex = Songs.SongList.Count - 1;
             }
 
             if (nextIndex == indexOfCurrentSong)
@@ -145,7 +144,7 @@ namespace Player.Models
                 return;
             }
 
-            PlaySong(SongList[nextIndex]);
+            PlaySong(Songs.SongList[nextIndex]);
         }
 
         private void RepeatSong(SongInfo song)
