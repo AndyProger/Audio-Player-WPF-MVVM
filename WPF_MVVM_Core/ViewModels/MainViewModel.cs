@@ -11,7 +11,7 @@ namespace Player.ViewModels
 {
     partial class MainViewModel : ViewModelBase
     {
-        public AudioPlayer Player { get; set; } = new AudioPlayer();
+        private AudioPlayer Player { get; set; } = new AudioPlayer();
         public Playlist CurrentPlaylist { get; set; } = new Playlist();
         public ObservableCollection<SongInfo> CurrentSongList { get; set; } = new ObservableCollection<SongInfo>();
         public ObservableCollection<Playlist> Playlists { get; set; } = new ObservableCollection<Playlist>();
